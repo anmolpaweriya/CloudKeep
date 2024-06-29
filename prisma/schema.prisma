@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  filesAndFolders  FilesAndFolders[]
+  loggedIndDevices LoggedInDevices[]
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model LoggedInDevices {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String @db.ObjectId
+  deviceType   String
+  user         User   @relation(fields: [userId], references: [id])
+  refreshToken String
+}
+
+model FilesAndFolders {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  uid          String   @unique
+  name         String
+  path         String[] @default([])
+  userId       String   @db.ObjectId
+  user         User     @relation(fields: [userId], references: [id])
+  parent       String   @default("home")
+  fileServerId String?
+  type         FileType
+  createdAt    DateTime @default(now())
+
+  @@unique(name: "NameAlreadyExists", [userId, parent, name, type])
+}
+
+enum FileType {
+  FILE
+  FOLDER
+}
