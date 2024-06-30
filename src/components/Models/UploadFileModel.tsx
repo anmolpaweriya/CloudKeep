@@ -85,6 +85,8 @@ export default function UploadFileModel(props: {
 
 
     async function uploadingFilesList() {
+
+
         for (let fileIndex in files)
             await uploadFile(Number(fileIndex))
 
@@ -100,12 +102,7 @@ export default function UploadFileModel(props: {
     async function uploadFile(fileIndex: number) {
 
 
-        const tokenVerifyData: any = await verifyToken();
 
-        if (tokenVerifyData.err) {
-            alert("Token Not Valid")
-            return;
-        }
         return new Promise((res) => {
 
 

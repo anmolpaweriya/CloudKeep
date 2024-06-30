@@ -27,7 +27,7 @@ export default function FilesAndFoldersDataProvider({ parent, children }: {
     const [filesAndFoldersData, setFilesAndFoldersData] = useState<any[]>([])
     const [path, setPath] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const tokenData = useTokenData();
+    // const tokenData = useTokenData();
 
 
     async function fetchFilesAndFoldersData() {
@@ -36,6 +36,8 @@ export default function FilesAndFoldersDataProvider({ parent, children }: {
         const timeOut = setTimeout(() => {
             setIsLoading(true)
         }, 300);
+
+
         const data = await fetch('/api/folder', {
             method: "POST",
             headers: {
@@ -44,7 +46,6 @@ export default function FilesAndFoldersDataProvider({ parent, children }: {
             body: JSON.stringify({ parent })
 
         }).then(res => res.json())
-
 
         clearTimeout(timeOut);
         setIsLoading(false)
@@ -64,9 +65,9 @@ export default function FilesAndFoldersDataProvider({ parent, children }: {
 
 
     useEffect(() => {
-
-        fetchFilesAndFoldersData()
-    }, [tokenData])
+        if (localStorage.getItem('apCloudAccessToken'))
+            fetchFilesAndFoldersData()
+    }, [])
 
 
     if (isLoading) return <Loading />
