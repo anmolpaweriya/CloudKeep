@@ -43,10 +43,10 @@ export default function CreateFolderModel(props: {
             setIsLoading(false)
         }, 1000);
         if (data.err) {
-
-            if (data.err.meta.target === "FilesAndFolders_parent_name_key")
-                alert("Folder Already Exists");
             console.log(data.err)
+
+            if (data.err?.meta?.target === "FilesAndFolders_parent_name_key")
+                alert("Folder Already Exists");
             return;
         }
 

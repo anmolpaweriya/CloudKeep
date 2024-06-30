@@ -61,6 +61,45 @@ export async function POST(req: NextRequest) {
     }
 
 }
+
+
+
+async function createFolderRecursively(name: string, userId: string, parent: string, path: string[]) {
+    let folder: any = await prisma.filesAndFolders.findFirst({
+        where: {
+            name: name.split('/')[0],
+            parent,
+            userId,
+            type: "FOLDER"
+        }
+    })
+
+
+    let folderUID: string = folder?.uid || "";
+
+    if (!folder) {
+        folderUID = uuidv4();
+
+        folder = await prisma.filesAndFolders.create({
+            data: {
+                uid: folderUID,
+                name: name.split('/')[0],
+                userId,
+                parent,
+                path: [...path, folderUID],
+                type: "FOLDER"
+            }
+        })
+    }
+
+    if (name.includes('/'))
+        await createFolderRecursively(name.split('/').slice(1).join('/'), userId, folderUID, [...path, folderUID]);
+
+
+    return folder;
+
+}
+
 export async function PUT(req: NextRequest) {
 
     const accessToken = req.headers.get('authentication')?.split("Bearer ")[1];
@@ -73,23 +112,28 @@ export async function PUT(req: NextRequest) {
     try {
         const verify: any = jwt.verify(String(accessToken), String(process.env.ACCESS_TOKEN_SECRET));
 
-        const folderUID = uuidv4();
-        const folder = await prisma.filesAndFolders.create({
-            data: {
-                uid: folderUID,
-                name: data.folderName,
-                userId: verify.id,
-                parent: data.parent,
-                path: [...data.path, `${folderUID}`],
-                type: "FOLDER"
-            }
-        })
+        // const folderUID: string = uuidv4();
+
+        // const folder = await prisma.filesAndFolders.create({
+        //     data: {
+        //         uid: folderUID,
+        //         name: data.folderName.split('/')[0],
+        //         userId: verify.id,
+        //         parent: data.parent,
+        //         path: [...data.path, folderUID],
+        //         type: "FOLDER"
+        //     }
+        // })
+
+        // if (data.folderName.includes('/'))
+        const folder = await createFolderRecursively(data.folderName, verify.id, data.parent, data.path)
+
 
         return NextResponse.json(folder, { status: 201 })
 
 
     } catch (err) {
-
+        console.log(err)
         return NextResponse.json({ err }, { status: 403 })
 
 
@@ -140,8 +184,22 @@ export async function PATCH(req: NextRequest) {
 
 
 function getGoogleAPIAuth() {
+    const credentials = {
+        type: process.env.type,
+        project_id: process.env.project_id,
+        private_key_id: process.env.private_key_id,
+        private_key: process.env.private_key,
+        client_email: process.env.client_email,
+        client_id: process.env.client_id,
+        auth_uri: process.env.auth_uri,
+        token_uri: process.env.token_uri,
+        auth_provider_x509_cert_url: process.env.auth_provider_x509_cert_url,
+        client_x509_cert_url: process.env.client_x509_cert_url,
+        universe_domain: process.env.universe_domain,
+    }
     return new google.auth.GoogleAuth({
-        keyFile: process.cwd() + "/src/data/googleAPICredentials.json",
+        // keyFile: process.cwd() + "/src/data/googleAPICredentials.json",
+        credentials,
         scopes: ["https://www.googleapis.com/auth/drive"],
     });
 }

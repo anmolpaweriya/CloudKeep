@@ -1,5 +1,4 @@
-import { useSetFilesAndFoldersData } from "@/context/fileAndFolderContext";
-import { useRouter } from "next/navigation";
+import { useFolderPath, useSetFilesAndFoldersData } from "@/context/fileAndFolderContext";
 import { useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
@@ -20,7 +19,7 @@ export default function UploadFileModel(props: {
     const [uplaodingFileIndex, setUplaodingFileIndex] = useState(-1)
     const progressBarRef: any = useRef();
     const setFilesAndFoldersData: any = useSetFilesAndFoldersData();
-
+    const path: any = useFolderPath();
 
 
 
@@ -106,7 +105,9 @@ export default function UploadFileModel(props: {
             formData.append("fileName", files[fileIndex].fileName)
             formData.append("file", files[fileIndex].file);
             formData.append("parent", props.parentId);
+            formData.append('parentPath', path);
 
+            console.log(path)
             const xhr = new XMLHttpRequest();
 
             xhr.upload.onprogress = (event: any) => {
@@ -120,8 +121,13 @@ export default function UploadFileModel(props: {
             xhr.onload = () => {
 
                 const data = JSON.parse(xhr.response)
+                console.log(data)
                 if (data.success)
-                    setFilesAndFoldersData((pre: any) => [...pre, data.data])
+                    setFilesAndFoldersData((pre: any) => {
+                        const isExists = pre.find((element: any) => element.uid === data.data.uid)
+                        if (isExists) return pre
+                        return [...pre, data.data]
+                    })
                 setFiles(pre => pre.map((file, index: number) => {
                     if (index === fileIndex) {
                         file.uploaded = true

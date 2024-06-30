@@ -69,18 +69,69 @@ async function deleteFileFromDrive(fileId: string) {
 
 }
 
+
+
+async function createFolderRecursively(name: string, userId: string, parent: string, path: string[], rootFolder: any = null) {
+
+    let folder: any = await prisma.filesAndFolders.findFirst({
+        where: {
+            name: name.split('/')[0],
+            parent,
+            userId,
+            type: "FOLDER"
+        }
+    })
+
+    let folderUID: string = folder?.uid || "";
+    if (!folder) {
+        folderUID = uuidv4();
+        folder = await prisma.filesAndFolders.create({
+            data: {
+                uid: folderUID,
+                name: name.split('/')[0],
+                userId,
+                parent,
+                path: [...path, folderUID],
+                type: "FOLDER"
+            }
+        })
+    }
+    if (name.includes('/'))
+        return await createFolderRecursively(name.split('/').slice(1).join('/'), userId, folderUID, [...path, folderUID], folder);
+
+    return { rootFolder: rootFolder || folder, parentFolder: folder };
+
+
+}
+
 export async function PUT(req: NextRequest) {
 
     try {
         const formData = await req.formData();
         const file: any = formData.get("file");
-        const parent: any = formData.get("parent");
-        const fileName: any = formData.get("fileName");
+        let parent: any = formData.get("parent");
+        let fileName: any = formData.get("fileName");
+        const path: any = formData.get('parentPath') || [];
+        let rootFolderData: any = null;
 
         const accessToken = req.headers.get('authentication')?.split("Bearer ")[1];
         // console.log(req.headers)
         const verify: any = jwt.verify(String(accessToken), String(process.env.ACCESS_TOKEN_SECRET));
 
+
+
+        // create folders if not exists for given path
+        if (fileName.includes("/")) {
+            const nameSplit = fileName.split('/');
+            const filePath = nameSplit.slice(0, nameSplit.length - 1).join('/');
+            fileName = nameSplit.at(-1)
+
+            const { rootFolder, parentFolder }: { rootFolder: any, parentFolder: any } = await createFolderRecursively(filePath, verify.id, parent, path)
+            parent = parentFolder.uid;
+            rootFolderData = rootFolder;
+
+
+        }
 
 
         const isExist = await prisma.filesAndFolders.findFirst({ where: { name: fileName, parent } })
@@ -106,8 +157,7 @@ export async function PUT(req: NextRequest) {
 
 
 
-
-        return NextResponse.json({ success: "uploaded", data }, { status: 201 })
+        return NextResponse.json({ success: "uploaded", data: rootFolderData || data }, { status: 201 })
     } catch (err) {
         return NextResponse.json({ err })
     }
