@@ -27,7 +27,7 @@ export default function FilesAndFoldersDataProvider({ parent, children }: {
     const [filesAndFoldersData, setFilesAndFoldersData] = useState<any[]>([])
     const [path, setPath] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    // const tokenData = useTokenData();
+    const tokenData: any = useTokenData();
 
 
     async function fetchFilesAndFoldersData() {
@@ -65,9 +65,9 @@ export default function FilesAndFoldersDataProvider({ parent, children }: {
 
 
     useEffect(() => {
-        if (localStorage.getItem('apCloudAccessToken'))
+        if (localStorage.getItem('apCloudAccessToken') && tokenData.id)
             fetchFilesAndFoldersData()
-    }, [])
+    }, [tokenData])
 
 
     if (isLoading) return <Loading />
