@@ -249,6 +249,10 @@ export async function DELETE(req: NextRequest) {
         const { uid }: { uid: string } = await req.json();
 
         const accessToken = req.headers.get('authentication')?.split("Bearer ")[1];
+        if (!accessToken)
+            return NextResponse.json({ err: "Forbidden" }, { status: 401 })
+
+
         // console.log(req.headers)
         const verify: any = jwt.verify(String(accessToken), String(process.env.ACCESS_TOKEN_SECRET));
 
@@ -278,7 +282,7 @@ export async function DELETE(req: NextRequest) {
 
         return NextResponse.json({ success: "removed" }, { status: 200 })
     } catch (err) {
-        return NextResponse.json({ err })
+        return NextResponse.json({ err }, { status: 403 })
     }
 
 

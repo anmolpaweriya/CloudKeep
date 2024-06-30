@@ -2,6 +2,7 @@ import { useSetFilesAndFoldersData } from "@/context/fileAndFolderContext";
 import { useSetIsLoading } from "@/context/loadingScreenContext";
 import { useState } from "react";
 import "client-only"
+import { useVerifyTokenFunc } from "@/context/tokenContext";
 
 export default function RenameModel(props: {
     cancelBtnFunc: () => void,
@@ -14,6 +15,7 @@ export default function RenameModel(props: {
     const [name, setName] = useState(props.defaultName);
     const setFolderData: any = useSetFilesAndFoldersData();
     const setIsLoading = useSetIsLoading();
+    const verifyToken: any = useVerifyTokenFunc();
 
 
 
@@ -21,11 +23,18 @@ export default function RenameModel(props: {
 
 
 
-    async function renameBtnFunc() {
+    async function renameBtnFunc(e: any) {
+        e.preventDefault();
         if (name === "")
             return;
 
         // if (typeof window === "undefined") return
+        const tokenVerifyData: any = await verifyToken();
+
+        if (tokenVerifyData.err) {
+            alert("Token Not Valid")
+            return;
+        }
 
         setIsLoading(true);
 
@@ -66,7 +75,7 @@ export default function RenameModel(props: {
     }
 
 
-    return <div className="fixed  z-50 top-[50%] w-[90%] max-w-md left-[50%] translate-y-[-50%] translate-x-[-50%] py-5 px-3 rounded-lg shadow-[0_0_0_100vw_#00000099]  bg-white grid gap-2">
+    return <form className="fixed  z-50 top-[50%] w-[90%] max-w-md left-[50%] translate-y-[-50%] translate-x-[-50%] py-5 px-3 rounded-lg shadow-[0_0_0_100vw_#00000099]  bg-white grid gap-2">
         <h1 className="text-center border-b p-4 mb-3 border-b-gray-500 text-3xl font-semibold">Rename </h1>
         <h5 className=" font-medium">New name</h5>
         <input
@@ -93,5 +102,5 @@ export default function RenameModel(props: {
                 <p>Cancel</p>
             </button>
         </div>
-    </div>
+    </form>
 }

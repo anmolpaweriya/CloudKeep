@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { useSetFilesAndFoldersData } from "@/context/fileAndFolderContext";
 import { useEffect, useState } from "react";
 import RenameModel from "../Models/RenameModel";
+import { useVerifyTokenFunc } from "@/context/tokenContext";
 
 
 
@@ -32,6 +33,8 @@ export default function FileAndFolderContextMenu(props: {
 
     const router = useRouter();
     const setFilesAndFoldersData: any = useSetFilesAndFoldersData();
+    const verifyToken: any = useVerifyTokenFunc();
+
     let { top, left } = props;
 
 
@@ -63,9 +66,16 @@ export default function FileAndFolderContextMenu(props: {
         setRenameModelShow(true);
     }
 
-    function deleteFileOrFolderFunc() {
+    async function deleteFileOrFolderFunc() {
 
-        fetch(`/api/${props.file.type.toLowerCase()}`,
+        const tokenVerifyData: any = await verifyToken();
+
+        if (tokenVerifyData.err) {
+            alert("Token Not Valid")
+            return;
+        }
+
+        const data: any = await fetch(`/api/${props.file.type.toLowerCase()}`,
             {
                 method: "DELETE",
                 headers: {
@@ -77,7 +87,11 @@ export default function FileAndFolderContextMenu(props: {
                 })
             })
 
+        if (data.err) {
+            console.log(data.err)
+            return;
 
+        }
 
         setFilesAndFoldersData((pre: any) => pre.filter((file: any) => file.id !== props.file.id))
 

@@ -1,4 +1,5 @@
 import { useFolderPath, useSetFilesAndFoldersData } from "@/context/fileAndFolderContext";
+import { useVerifyTokenFunc } from "@/context/tokenContext";
 import { useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
@@ -20,6 +21,7 @@ export default function UploadFileModel(props: {
     const progressBarRef: any = useRef();
     const setFilesAndFoldersData: any = useSetFilesAndFoldersData();
     const path: any = useFolderPath();
+    const verifyToken: any = useVerifyTokenFunc();
 
 
 
@@ -98,7 +100,16 @@ export default function UploadFileModel(props: {
     async function uploadFile(fileIndex: number) {
 
 
+        const tokenVerifyData: any = await verifyToken();
+
+        if (tokenVerifyData.err) {
+            alert("Token Not Valid")
+            return;
+        }
         return new Promise((res) => {
+
+
+
 
             const formData = new FormData();
 
@@ -107,7 +118,7 @@ export default function UploadFileModel(props: {
             formData.append("parent", props.parentId);
             formData.append('parentPath', path);
 
-            console.log(path)
+
             const xhr = new XMLHttpRequest();
 
             xhr.upload.onprogress = (event: any) => {

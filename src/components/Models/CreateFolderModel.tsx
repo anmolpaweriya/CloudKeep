@@ -1,5 +1,8 @@
+"use client"
+
 import { useFolderPath, useSetFilesAndFoldersData } from "@/context/fileAndFolderContext";
 import { useSetIsLoading } from "@/context/loadingScreenContext";
+import { useVerifyTokenFunc } from "@/context/tokenContext";
 import { useState } from "react";
 
 export default function CreateFolderModel(props: {
@@ -12,6 +15,7 @@ export default function CreateFolderModel(props: {
     const path: any = useFolderPath();
     const setFolderData: any = useSetFilesAndFoldersData();
     const setIsLoading = useSetIsLoading();
+    const verifyToken: any = useVerifyTokenFunc();
 
 
 
@@ -20,12 +24,20 @@ export default function CreateFolderModel(props: {
 
 
 
-
-    async function createFolderBtnFunc() {
+    async function createFolderBtnFunc(e: any) {
+        e.preventDefault();
         if (folderName === "")
             return;
 
         if (typeof window === "undefined") return
+
+        const tokenVerifyData: any = await verifyToken();
+
+        if (tokenVerifyData.err) {
+            alert("Token Not Valid")
+            return;
+        }
+
 
         setIsLoading(true);
         const data: any = await fetch('/api/folder', {
@@ -45,8 +57,11 @@ export default function CreateFolderModel(props: {
         if (data.err) {
             console.log(data.err)
 
+
+
             if (data.err?.meta?.target === "FilesAndFolders_parent_name_key")
                 alert("Folder Already Exists");
+
             return;
         }
 
@@ -56,7 +71,7 @@ export default function CreateFolderModel(props: {
     }
 
 
-    return <div className="fixed  z-50 top-[50%] w-[90%] max-w-md left-[50%] translate-y-[-50%] translate-x-[-50%] py-5 px-3 rounded-lg shadow-[0_0_0_100vw_#00000099]  bg-white grid gap-2">
+    return <form className="fixed  z-50 top-[50%] w-[90%] max-w-md left-[50%] translate-y-[-50%] translate-x-[-50%] py-5 px-3 rounded-lg shadow-[0_0_0_100vw_#00000099]  bg-white grid gap-2">
         <h1 className="text-center border-b p-4 mb-3 border-b-gray-500 text-3xl font-semibold">Create Folder </h1>
         <h5 className=" font-medium">Name</h5>
         <input
@@ -83,5 +98,5 @@ export default function CreateFolderModel(props: {
                 <p>Cancel</p>
             </button>
         </div>
-    </div>
+    </form>
 }

@@ -1,9 +1,12 @@
+"use client"
+
 import "client-only"
 import { JWTUtils } from "@/utils/jwtUtils";
 import React, { useContext, useEffect, useState } from "react";
 
 
 const TokenDataContext = React.createContext({});
+const VerifyTokenDataContext = React.createContext(() => { });
 
 
 
@@ -15,6 +18,9 @@ export function useTokenData() {
     return useContext(TokenDataContext);
 }
 
+export function useVerifyTokenFunc() {
+    return useContext(VerifyTokenDataContext);
+}
 
 
 
@@ -35,29 +41,29 @@ export default function TokenProvider(props: any) {
             localStorage.removeItem('apCloudRefreshToken')
 
 
-            return;
+            return data;
         }
         localStorage.setItem('apCloudAccessToken', data.accessToken)
 
         setTokenData(data.data)
 
+        return data
 
     }
 
     async function veriryToken() {
-        if (typeof window === "undefined") return
+
 
         const accessToken: string = String(localStorage.getItem('apCloudAccessToken'))
         const data = await JWTUtils.fetchAccessTokenData(accessToken);
         if (data.err) {
-            await refreshAccessToken()
-            return;
+            return await refreshAccessToken()
+
         }
 
         setTokenData(data)
 
-
-
+        return data;
 
     }
     useEffect(() => {
@@ -65,6 +71,10 @@ export default function TokenProvider(props: any) {
     }, [])
 
     return <TokenDataContext.Provider value={tokenData}>
-        {props.children}
+        <VerifyTokenDataContext.Provider value={veriryToken}>
+
+            {props.children}
+
+        </VerifyTokenDataContext.Provider>
     </TokenDataContext.Provider>
 }
