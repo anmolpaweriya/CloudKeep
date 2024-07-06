@@ -2,6 +2,7 @@ import "client-only"
 import React, { useContext, useEffect, useState } from "react";
 import Loading from "@/loading";
 import { useTokenData } from "./tokenContext";
+import { useRouter } from "next/navigation";
 
 
 
@@ -28,6 +29,7 @@ export default function FilesAndFoldersDataProvider({ parent, children }: {
     const [path, setPath] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const tokenData: any = useTokenData();
+    const router = useRouter();
 
 
     async function fetchFilesAndFoldersData() {
@@ -38,17 +40,23 @@ export default function FilesAndFoldersDataProvider({ parent, children }: {
         }, 300);
 
 
-        const data = await fetch('/api/folder', {
+        const res = await fetch('/api/folder', {
             method: "POST",
             headers: {
                 "Authentication": `Bearer ${localStorage.getItem('apCloudAccessToken')}`
             },
             body: JSON.stringify({ parent })
 
-        }).then(res => res.json())
+        });
 
         clearTimeout(timeOut);
         setIsLoading(false)
+
+        if (res.status === 404)
+            router.replace('/app')
+
+        const data = await res.json();
+
 
 
         if (data.err) {

@@ -129,7 +129,7 @@ export default function UploadFileModel(props: {
             xhr.onload = () => {
 
                 const data = JSON.parse(xhr.response)
-                console.log(data)
+                // console.log(data)
                 if (data.success)
                     setFilesAndFoldersData((pre: any) => {
                         const isExists = pre.find((element: any) => element.uid === data.data.uid)

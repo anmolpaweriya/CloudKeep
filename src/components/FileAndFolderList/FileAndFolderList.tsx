@@ -76,12 +76,15 @@ export default function FileAndFolderList(props: {
             showContextMenu={contextMenuConfig.showContextMenu}
             file={contextMenuConfig.file}
             setContextMenuConfig={setContextMenuConfig}
+            parent={props.parent}
         />
 
-        <div className="mt-5 grid gap-3 px-4 w-full pb-32 "
+        <div className=" grid gap-3 px-4 pb-32 w-full overflow-y-scroll h-full "
             style={{
-                gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))"
+                gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
+                gridTemplateRows: "repeat(auto-fill,minmax(150px,1fr))",
             }}
+            onContextMenu={e => contextMenuFunc(e, null)}
         >
 
 
@@ -91,9 +94,12 @@ export default function FileAndFolderList(props: {
                 fileAndFolderData?.map((file: any) => {
                     if (file.type == "FOLDER" && file.name.includes(props.searchText))
                         return <Link
-                            onContextMenu={e => contextMenuFunc(e, file)}
+                            onContextMenu={e => {
+                                e.stopPropagation();
+                                contextMenuFunc(e, file);
+                            }}
                             className="  flex flex-col justify-center items-center text-base  shadow hover:shadow-lg h-[150px] transition-all font-medium   rounded-md p-2 bg-slate-200"
-                            href={`/${file.uid}`}
+                            href={`/app/${file.uid}`}
                             key={file.uid}
                         >
 
@@ -109,7 +115,10 @@ export default function FileAndFolderList(props: {
                                     className="truncate text-sm"
                                 > {trucateString(file.name, 13)}</p>
                                 <button
-                                    onClick={e => contextMenuFunc(e, file)}
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        contextMenuFunc(e, file);
+                                    }}
                                 ><IoMdMore /></button>
                             </div>
                         </Link>
@@ -126,7 +135,10 @@ export default function FileAndFolderList(props: {
                     if (file.type === "FILE" && file.name.includes(props.searchText))
                         return <a
                             href={`/api/file/${file.fileServerId}`}
-                            onContextMenu={e => contextMenuFunc(e, file)}
+                            onContextMenu={e => {
+                                e.stopPropagation();
+                                contextMenuFunc(e, file);
+                            }}
                             className="  flex flex-col justify-center items-center text-base  shadow hover:shadow-lg h-[150px] transition-all font-medium   rounded-md p-2  bg-slate-200 gap-1"
                             key={file.uid}
                         >
@@ -150,7 +162,10 @@ export default function FileAndFolderList(props: {
                                 > {trucateString(file.name, 13)}</p>
                                 <button
                                     className="text-xl"
-                                    onClick={e => contextMenuFunc(e, file)}
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        contextMenuFunc(e, file);
+                                    }}
                                 ><IoMdMore /></button>
 
                             </div>

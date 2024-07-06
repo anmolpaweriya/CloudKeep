@@ -6,8 +6,8 @@ export default function BreadCrumb() {
 
     const path: any = useFolderPath();
 
-    return <div className="px-2 gap-1 flex items-center">
-        <Link href={'/home'}>
+    return <div className="px-2 gap-1 flex items-center h-full">
+        <Link href={'/app/home'}>
             <img src="/img/home.png" alt="" />
         </Link>
 
@@ -26,7 +26,7 @@ export default function BreadCrumb() {
                     return <Fragment key={id}>
                         <p className="font-semibold text-xl">/</p>
 
-                        <Link href={id}
+                        <Link href={`/app/${id}`}
                             className="font-medium text-lg"
                         >
                             {name}

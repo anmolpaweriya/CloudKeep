@@ -18,8 +18,6 @@ export default function Home({ params }: { params: { parentId: string } }) {
     const [searchText, setSearchText] = useState("")
 
 
-
-
     useEffect(() => {
 
         if (typeof window !== "undefined" && !localStorage.getItem('apCloudAccessToken'))
@@ -33,19 +31,25 @@ export default function Home({ params }: { params: { parentId: string } }) {
         <TokenProvider>
             <FilesAndFoldersDataProvider parent={params.parentId}>
 
+                <div className="grid grid-rows-[150px_auto] w-svw h-svh overflow-hidden">
 
-                <NavBar
-                    parentId={params.parentId}
-                    searchText={searchText}
-                    setSearchText={setSearchText}
-                />
+                    <NavBar
+                        parentId={params.parentId}
+                        searchText={searchText}
+                        setSearchText={setSearchText}
+                    />
 
-                <BreadCrumb />
+                    <div className="w-full h-full grid grid-rows-[4em_auto]  overflow-y-scroll">
 
-                <FileAndFolderList
-                    searchText={searchText}
-                    parent={params.parentId}
-                />
+
+                        <BreadCrumb />
+
+                        <FileAndFolderList
+                            searchText={searchText}
+                            parent={params.parentId}
+                        />
+                    </div>
+                </div>
 
             </FilesAndFoldersDataProvider>
         </TokenProvider>

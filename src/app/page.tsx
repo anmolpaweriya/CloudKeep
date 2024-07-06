@@ -15,7 +15,7 @@ export default function Home() {
       router.push('auth');
 
     else
-      router.push('/home')
+      router.push('/app/home')
   })
 
 

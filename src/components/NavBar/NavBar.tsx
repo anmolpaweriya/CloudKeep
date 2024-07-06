@@ -62,7 +62,7 @@ export default function NavBar(props: {
 
 
 
-        <nav className="px-4 h-30 bg-white md:px-6 py-8 sticky top-0  z-40">
+        <nav className="px-4 h-30 bg-white md:px-6 py-8 sticky top-0 box-border w-full  z-40">
             <div className=" flex justify-between items-center">
 
                 <h1 className="text-3xl font-bold">File Storage</h1>
@@ -74,7 +74,6 @@ export default function NavBar(props: {
                             onChange={(e: any) => props.setSearchText(e.target.value)}
                             spellCheck={false}
                             className="border   border-gray-300 rounded text-md box-border px-3 py-2 outline-gray-500"
-
                             placeholder="Search file ..."
 
                         />
@@ -128,6 +127,8 @@ export default function NavBar(props: {
 
             <div className="grid grid-cols-[auto_50px_50px] gap-1 font-semibold mt-3 md:hidden">
                 <input
+                    value={props.searchText}
+                    onChange={(e: any) => props.setSearchText(e.target.value)}
 
                     spellCheck={false}
                     className="border   border-gray-300 rounded text-md box-border px-3 py-2 outline-gray-500"

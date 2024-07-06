@@ -17,6 +17,23 @@ export async function POST(req: NextRequest) {
     try {
         const verify: any = jwt.verify(String(accessToken), String(process.env.ACCESS_TOKEN_SECRET));
 
+
+
+
+        let parentFolderData: any = null;
+
+        if (data.parent !== "home") {
+            parentFolderData = await prisma.filesAndFolders.findFirst({
+                where: {
+                    userId: verify.id,
+                    uid: data.parent
+                }
+            })
+
+            if (!parentFolderData)
+                return NextResponse.json({ err: "Folder Not Found" }, { status: 404 })
+
+        }
         const filesAndFolders = await prisma.filesAndFolders.findMany({
             where: {
                 userId: verify.id,
@@ -24,12 +41,8 @@ export async function POST(req: NextRequest) {
 
             }
         })
-        let parentFolderData = await prisma.filesAndFolders.findFirst({
-            where: {
-                userId: verify.id,
-                uid: data.parent
-            }
-        })
+
+
 
 
         const path = parentFolderData?.path || []
@@ -133,7 +146,7 @@ export async function PUT(req: NextRequest) {
 
 
     } catch (err) {
-        console.log(err)
+        // console.log(err)
         return NextResponse.json({ err }, { status: 403 })
 
 

@@ -9,11 +9,11 @@ Next-Cloud is a cloud storage application built with Next.js, designed to provid
 ## Features
 
 - **Redirects:**
-  - `/` redirects to `/home`.
+  - `/` redirects to `/app/home`.
   
 - **Routes:**
   - **File and Folder Navigation:**
-    - `/[parentId]`: Displays files and folders within the specified parent directory.
+    - `/app/[parentId]`: Displays files and folders within the specified parent directory.
   - **Authentication:**
     - `/auth`: Handles user login and signup.
   - **Backend APIs:**
