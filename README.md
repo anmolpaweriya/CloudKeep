@@ -44,11 +44,17 @@ Next-Cloud is a cloud storage application built with Next.js, designed to provid
 3. **Configure environment variables:**
    - Create a `.env` file in the root directory with the following variables:
      ```
+      # App variables 
       DATABASE_URL=""
       ACCESS_TOKEN_SECRET=""
       REFRESH_TOKEN_SECRET=""
       ACCESS_TOKEN_EXPIRES_IN="10m"
       REFRESH_TOKEN_EXPIRES_IN="30d"
+
+      #Google Drive folder
+      DRIVE_FOLDER_ID=""
+
+      # Google Cloud Service Account Credentials
       type= "service_account"
       project_id= ""
       private_key_id= ""

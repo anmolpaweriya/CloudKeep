@@ -42,7 +42,7 @@ async function uploadFileToDrive(fileName: string, file: any) {
     };
     const fileMetadata = {
         name: fileName,
-        parents: ["1x2cbWWRcpQggIHOrW_kZi_v3yxl9lWtp"], // Use the ID of the subfolder
+        parents: [`${process.env.DRIVE_FOLDER_ID}`], // Use the ID of the subfolder
     };
     const fileResponse = await drive.files.create({
         requestBody: fileMetadata,
