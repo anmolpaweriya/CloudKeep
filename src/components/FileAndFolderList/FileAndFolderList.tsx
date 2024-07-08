@@ -10,7 +10,9 @@ import { IoMdMore } from "react-icons/io";
 
 export default function FileAndFolderList(props: {
     parent: string,
-    searchText: string
+    searchText: string,
+    setOpenCreateFolderModel: any,
+    setOpenUploadFileModel: any
 }) {
 
 
@@ -77,6 +79,8 @@ export default function FileAndFolderList(props: {
             file={contextMenuConfig.file}
             setContextMenuConfig={setContextMenuConfig}
             parent={props.parent}
+            setOpenCreateFolderModel={props.setOpenCreateFolderModel}
+            setOpenUploadFileModel={props.setOpenUploadFileModel}
         />
 
         <div className=" grid gap-3 px-4 pb-32 w-full overflow-y-scroll h-full "

@@ -10,13 +10,16 @@ import UploadFileModel from "../Models/UploadFileModel";
 export default function NavBar(props: {
     parentId: string,
     searchText: string,
-    setSearchText: any
+    setSearchText: any,
+    openCreateFolderModel: boolean,
+    openUploadFileModel: boolean,
+    setOpenCreateFolderModel: any,
+    setOpenUploadFileModel: any
 }) {
 
 
     const [openProfileModel, setOpenProfileModel] = useState(false);
-    const [openCreateFolderModel, setOpenCreateFolderModel] = useState(false);
-    const [openUploadFileModel, setOpenUploadFileModel] = useState(false);
+
 
     const router = useRouter();
     const data: any = useTokenData();
@@ -47,16 +50,16 @@ export default function NavBar(props: {
 
 
     return <>
-        {openCreateFolderModel &&
+        {props.openCreateFolderModel &&
             <CreateFolderModel
                 parentId={props.parentId}
-                cancelBtnFunc={() => { setOpenCreateFolderModel(false) }}
+                cancelBtnFunc={() => { props.setOpenCreateFolderModel(false) }}
             />
         }
-        {openUploadFileModel &&
+        {props.openUploadFileModel &&
             <UploadFileModel
                 parentId={props.parentId}
-                cancelBtnFunc={() => { setOpenUploadFileModel(false) }}
+                cancelBtnFunc={() => { props.setOpenUploadFileModel(false) }}
             />
         }
 
@@ -79,7 +82,7 @@ export default function NavBar(props: {
                         />
                         <button
                             className="bg-black text-white   flex p-2 px-3 gap-2 justify-center items-center rounded-md font-medium "
-                            onClick={() => setOpenCreateFolderModel(true)}
+                            onClick={() => props.setOpenCreateFolderModel(true)}
                         >
                             <img draggable={false} className='h-[17px]' src="/img/createFolder.png" alt="" />
                             <p>Create</p>
@@ -87,7 +90,7 @@ export default function NavBar(props: {
                         </button>
                         <button
                             className="bg-black text-white   flex p-2 px-3 gap-2 justify-center items-center rounded-md font-medium "
-                            onClick={() => setOpenUploadFileModel(true)}
+                            onClick={() => props.setOpenUploadFileModel(true)}
                         >
                             <img draggable={false} className='h-[15px]' src="/img/upload.png" alt="" />
                             <p>Upload</p>
@@ -138,14 +141,14 @@ export default function NavBar(props: {
                 />
 
                 <button
-                    onClick={() => setOpenCreateFolderModel(true)}
+                    onClick={() => props.setOpenCreateFolderModel(true)}
                     className="bg-black text-white   flex p-2 px-3 gap-2 justify-center items-center rounded-md font-medium "
                 >  <img draggable={false} className='h-[20px]' src="/img/createFolder.png" alt="" />
 
                 </button>
 
                 <button
-                    onClick={() => setOpenUploadFileModel(true)}
+                    onClick={() => props.setOpenUploadFileModel(true)}
                     className="bg-black text-white   flex p-2 px-3 gap-2 justify-center items-center rounded-md font-medium "
                 >  <img draggable={false} className='h-[16px]' src="/img/upload.png" alt="" /></button>
             </div>

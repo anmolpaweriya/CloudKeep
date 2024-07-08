@@ -40,7 +40,9 @@ export default function FileAndFolderContextMenu(props: {
     showContextMenu: Boolean,
     file: any,
     setContextMenuConfig: any,
-    parent: string
+    parent: string,
+    setOpenCreateFolderModel: any,
+    setOpenUploadFileModel: any
 }) {
 
 
@@ -208,8 +210,12 @@ export default function FileAndFolderContextMenu(props: {
                 }}
             >
 
-                <button className="box-border px-8 py-1 hover:bg-gray-100 flex gap-2 items-center rounded m-1"><MdCreateNewFolder />            <p className="text-sm">Create Folder</p></button>
-                <button className="box-border px-8 py-1 hover:bg-gray-100 flex gap-2 items-center rounded m-1"><MdOutlineFileUpload />            <p className="text-sm">Upload File</p></button>
+                <button className="box-border px-8 py-1 hover:bg-gray-100 flex gap-2 items-center rounded m-1"
+                    onClick={() => props.setOpenCreateFolderModel(true)}
+                ><MdCreateNewFolder />            <p className="text-sm">Create Folder</p></button>
+                <button
+                    onClick={() => props.setOpenUploadFileModel(true)}
+                    className="box-border px-8 py-1 hover:bg-gray-100 flex gap-2 items-center rounded m-1"><MdOutlineFileUpload />            <p className="text-sm">Upload File</p></button>
                 <div className="bg-gray-300 h-[1px]" ></div>
 
                 {selectedFiles.files.length > 0

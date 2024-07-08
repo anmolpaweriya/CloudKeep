@@ -15,7 +15,11 @@ export default function Home({ params }: { params: { parentId: string } }) {
 
     const router = useRouter();
     const isLoading = useIsLoading();
-    const [searchText, setSearchText] = useState("")
+    const [searchText, setSearchText] = useState("");
+    const [openCreateFolderModel, setOpenCreateFolderModel] = useState(false);
+    const [openUploadFileModel, setOpenUploadFileModel] = useState(false);
+
+
 
 
     useEffect(() => {
@@ -37,6 +41,10 @@ export default function Home({ params }: { params: { parentId: string } }) {
                         parentId={params.parentId}
                         searchText={searchText}
                         setSearchText={setSearchText}
+                        openCreateFolderModel={openCreateFolderModel}
+                        openUploadFileModel={openUploadFileModel}
+                        setOpenCreateFolderModel={setOpenCreateFolderModel}
+                        setOpenUploadFileModel={setOpenUploadFileModel}
                     />
 
                     <div className="w-full h-full grid grid-rows-[4em_auto]  overflow-y-scroll">
@@ -47,6 +55,8 @@ export default function Home({ params }: { params: { parentId: string } }) {
                         <FileAndFolderList
                             searchText={searchText}
                             parent={params.parentId}
+                            setOpenCreateFolderModel={setOpenCreateFolderModel}
+                            setOpenUploadFileModel={setOpenUploadFileModel}
                         />
                     </div>
                 </div>
