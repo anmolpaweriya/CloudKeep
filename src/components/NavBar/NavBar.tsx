@@ -55,7 +55,7 @@ export default function NavBar(props: {
 
       <nav className="px-4 h-30 bg-white md:px-6 py-8 sticky top-0 box-border w-full  z-40">
         <div className=" flex justify-between items-center">
-          <h1 className="text-3xl font-bold">FileNest</h1>
+          <h1 className="text-3xl font-bold">CloudKeep</h1>
           <div className="flex gap-2 items-center">
             <div className="flex  gap-2 text-sm max-md:hidden">
               <input
