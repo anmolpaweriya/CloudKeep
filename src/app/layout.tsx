@@ -6,7 +6,7 @@ import LoadingScreenProvider from "@/context/loadingScreenContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Next Cloud",
+  title: "CloudKeep",
   description: "free storage to upload and access your files from anywere",
 };
 
