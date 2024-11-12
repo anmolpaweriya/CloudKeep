@@ -1,10 +1,8 @@
-Certainly! Here's an updated version of the README with more attractive route descriptions:
-
 ---
 
-# Next-Cloud
+# CloudKeep
 
-Next-Cloud is a cloud storage application built with Next.js, designed to provide seamless file and folder management capabilities.
+CloudKeep is a cloud storage application built with Next.js, designed to provide seamless file and folder management capabilities.
 
 ## Features
 
@@ -32,8 +30,8 @@ Next-Cloud is a cloud storage application built with Next.js, designed to provid
 
 1. **Clone the repository:**
    ```
-   git clone https://github.com/anmolpaweriya/next-cloud.git
-   cd next-cloud
+   git clone https://github.com/anmolpaweriya/CloudKeep.git
+   cd CloudKeep
    ```
 
 2. **Install dependencies:**
