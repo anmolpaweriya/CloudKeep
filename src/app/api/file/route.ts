@@ -13,7 +13,7 @@ function getGoogleAPIAuth() {
         type: process.env.type,
         project_id: process.env.project_id,
         private_key_id: process.env.private_key_id,
-        private_key: process.env.private_key?.replace(/\\n/g, "\n"),
+        private_key: process.env.private_key?.replaceAll(/\\n/g, "\n").replaceAll("\"",""),
         client_email: process.env.client_email,
         client_id: process.env.client_id,
         auth_uri: process.env.auth_uri,
@@ -22,6 +22,7 @@ function getGoogleAPIAuth() {
         client_x509_cert_url: process.env.client_x509_cert_url,
         universe_domain: process.env.universe_domain,
     }
+
     return new google.auth.GoogleAuth({
         // keyFile: process.cwd() + "/src/data/googleAPICredentials.json",
         credentials,
